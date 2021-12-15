@@ -1,0 +1,62 @@
+import tkinter
+import time
+ 
+# width of the window
+window_width=800
+
+# height of the window
+window_height=600
+
+# initial x position of the ball
+ball_start_xpos = 50
+
+# initial y position of the ball
+ball_start_ypos = 50
+
+# radius of the ball
+ball_radius = 30
+
+# the movement of ball for each iteration
+ball_movement = 5
+
+# delay between successive frames in seconds
+refresh_seconds = 0.01
+ 
+# The main window 
+def create_window():
+  window = tkinter.Tk()
+  window.title("Bouncing Ball")
+  # Uses python 3.6+ string interpolation
+  window.geometry(f'{window_width}x{window_height}')
+  return window
+ 
+# Create a canvas for animation and add it to main window
+def create_canvas(window):
+  canvas = tkinter.Canvas(window)
+  canvas.configure(bg="black")
+  canvas.pack(fill="both", expand=True)
+  return canvas
+ 
+# Create and animate ball in an infinite loop
+def animate_ball(window, canvas,xinc,yinc):
+  ball = canvas.create_oval(ball_start_xpos-ball_radius,
+            ball_start_ypos-ball_radius,
+            ball_start_xpos+ball_radius,
+            ball_start_ypos+ball_radius,
+            fill="blue", outline="blue", width=4)
+  while True:
+    canvas.move(ball,xinc,yinc)
+    window.update()
+    time.sleep(refresh_seconds)
+    ball_pos = canvas.coords(ball)
+    # unpack array to variables
+    xl,yl,xr,yr = ball_pos
+    if xl < abs(xinc) or xr > window_width-abs(xinc):
+      xinc = -xinc
+    if yl < abs(yinc) or yr > window_height-abs(yinc):
+      yinc = -yinc
+ 
+# The actual execution starts here
+animation_window = create_window()
+animation_canvas = create_canvas(animation_window)
+animate_ball(animation_window,animation_canvas, ball_movement, ball_movement)
